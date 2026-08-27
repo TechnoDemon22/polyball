@@ -7,23 +7,29 @@ export interface ModalProps {
 }
 
 /**
- * Minimal accessible dialog: focus moves into the panel, Escape closes it, and
- * a click on the backdrop dismisses it.
+ * Minimal accessible dialog: focus moves into the panel on mount, Escape closes it, and
+ * a click on the backdrop dismisses it. Focus is preserved during re-renders.
  */
 export function Modal({ title, onClose, children }: ModalProps): JSX.Element {
   const panelRef = useRef<HTMLDivElement>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   useEffect(() => {
+    // Only focus the modal panel once on mount
     panelRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       if (event.key === 'Escape') {
         event.stopPropagation();
-        onClose();
+        onCloseRef.current();
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, []);
 
   return (
     <div

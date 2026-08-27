@@ -14,6 +14,7 @@ import type { Settings } from '../hooks/useSettings';
 export interface LandingPageProps {
   settings: Settings;
   toggleSetting: (key: keyof Settings) => void;
+  onServerUrlChange?: (url: string) => void;
   onPractice: () => void;
   onCreateRoom: () => void;
   onJoinRoom: (code: string) => void;
@@ -24,6 +25,7 @@ export interface LandingPageProps {
 export function LandingPage({
   settings,
   toggleSetting,
+  onServerUrlChange,
   onPractice,
   onCreateRoom,
   onJoinRoom,
@@ -134,7 +136,11 @@ export function LandingPage({
 
         {dialog === 'settings' ? (
           <Modal title="Settings" onClose={() => setDialog('none')}>
-            <SettingsPanel settings={settings} toggle={toggleSetting} />
+            <SettingsPanel
+              settings={settings}
+              toggle={toggleSetting}
+              onServerUrlChange={onServerUrlChange}
+            />
           </Modal>
         ) : null}
       </div>

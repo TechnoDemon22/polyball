@@ -9,6 +9,7 @@ export interface Settings {
   /** Rotate the arena so your own edge is always at the bottom. */
   lockCamera: boolean;
   showTouchControls: boolean;
+  serverUrl: string;
 }
 
 const STORAGE_KEY = 'polyball.settings.v1';
@@ -30,6 +31,7 @@ export const defaultSettings = (): Settings => ({
   symbols: true,
   lockCamera: true,
   showTouchControls: coarsePointer(),
+  serverUrl: '',
 });
 
 function readStored(): Partial<Settings> {
@@ -47,8 +49,11 @@ function readStored(): Partial<Settings> {
 const asBoolean = (value: unknown, fallback: boolean): boolean =>
   typeof value === 'boolean' ? value : fallback;
 
+const asString = (value: unknown, fallback: string): string =>
+  typeof value === 'string' ? value : fallback;
+
 /**
- * Persisted accessibility and audio preferences. Every value is validated on
+ * Persisted accessibility, server, and audio preferences. Every value is validated on
  * read, so a hand-edited localStorage entry cannot break the game.
  */
 export function useSettings(): {
@@ -66,6 +71,7 @@ export function useSettings(): {
       symbols: asBoolean(stored.symbols, defaults.symbols),
       lockCamera: asBoolean(stored.lockCamera, defaults.lockCamera),
       showTouchControls: asBoolean(stored.showTouchControls, defaults.showTouchControls),
+      serverUrl: asString(stored.serverUrl, defaults.serverUrl),
     };
   });
 
@@ -84,7 +90,13 @@ export function useSettings(): {
   }, []);
 
   const toggle = useCallback((key: keyof Settings): void => {
-    setSettings((current) => ({ ...current, [key]: !current[key] }));
+    setSettings((current) => {
+      const val = current[key];
+      if (typeof val === 'boolean') {
+        return { ...current, [key]: !val };
+      }
+      return current;
+    });
   }, []);
 
   return useMemo(() => ({ settings, setSetting, toggle }), [settings, setSetting, toggle]);

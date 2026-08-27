@@ -7,7 +7,7 @@ import { MultiplayerScreen } from './components/MultiplayerScreen';
 import { PracticeScreen } from './components/PracticeScreen';
 import { PracticeSetup } from './components/PracticeSetup';
 import { AudioEngine } from './game/audio';
-import { NetworkClient, loadSession } from './game/network';
+import { NetworkClient, loadSession, resolveWsUrl } from './game/network';
 import type { PracticeOptions } from './game/practice';
 import { usePlayerName } from './hooks/usePlayerName';
 import { useSettings } from './hooks/useSettings';
@@ -21,7 +21,7 @@ import { useRoute } from './router';
  */
 export function App(): JSX.Element {
   const { route, go } = useRoute();
-  const { settings, toggle } = useSettings();
+  const { settings, setSetting, toggle } = useSettings();
   const [name, setName] = usePlayerName();
   const [practiceOptions, setPracticeOptions] = useState<PracticeOptions | null>(null);
 
@@ -35,6 +35,10 @@ export function App(): JSX.Element {
 
   const network = useMemo(() => new NetworkClient(), []);
   useEffect(() => () => network.disconnect(), [network]);
+
+  useEffect(() => {
+    network.updateUrl(resolveWsUrl(settings.serverUrl));
+  }, [network, settings.serverUrl]);
 
   // Hook network events to React state
   useEffect(() => {
@@ -54,15 +58,16 @@ export function App(): JSX.Element {
       setNetworkRoom(room);
     });
 
-    const unsubError = network.on('error', (_code, msg) => {
+    const unsubError = (_code: string, msg: string) => {
       setErrorMessage(msg);
-    });
+    };
+    const unsubErr = network.on('error', unsubError);
 
     return () => {
       unsubCreated();
       unsubJoined();
       unsubState();
-      unsubError();
+      unsubErr();
     };
   }, [network, go]);
 
@@ -107,6 +112,7 @@ export function App(): JSX.Element {
     (options: RoomOptions): void => {
       audio.unlock();
       setCreateModalOpen(false);
+      setErrorMessage(null);
       network.createRoom(name || 'Host', options);
     },
     [audio, network, name],
@@ -115,6 +121,7 @@ export function App(): JSX.Element {
   const handleJoinRoom = useCallback(
     (code: string): void => {
       audio.unlock();
+      setErrorMessage(null);
       const session = loadSession();
       const token = session?.roomCode === code ? session.reconnectToken : undefined;
       network.joinRoom(code, name || 'Guest', token);
@@ -197,6 +204,7 @@ export function App(): JSX.Element {
       <LandingPage
         settings={settings}
         toggleSetting={toggle}
+        onServerUrlChange={(url) => setSetting('serverUrl', url)}
         onPractice={openPractice}
         onCreateRoom={() => {
           audio.unlock();
