@@ -1,0 +1,21 @@
+{
+  "name": "Polyball - Neon Multiplayer Pong",
+  "short_name": "Polyball",
+  "id": "com.polyball.game",
+  "description": "Fast-paced neon multiplayer Pong survival for 2 to 12 players. Play instantly in any web browser without installation.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#05060f",
+  "theme_color": "#05060f",
+  "categories": ["games", "arcade", "action"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

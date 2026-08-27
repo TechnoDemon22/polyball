@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Pinch zoom stays enabled (WCAG 1.4.4); accidental game-time zoom is
+         prevented by `touch-action: none` on the canvas and the pads instead of
+         by locking the viewport. `interactive-widget` keeps the layout viewport
+         stable when a keyboard opens. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#05060f" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Polyball - a neon multiplayer Pong survival game for 3 to 12 players. Play instantly in your browser, no download required."
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Polyball - neon multiplayer Pong survival</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Polyball needs JavaScript enabled to run.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

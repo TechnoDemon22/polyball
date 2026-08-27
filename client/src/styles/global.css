@@ -1,0 +1,131 @@
+/* Polyball global styles: dark neon sci-fi, mobile first. */
+
+:root {
+  --bg: #05060f;
+  --bg-soft: #0b0f22;
+  --panel: rgba(16, 22, 46, 0.82);
+  --panel-solid: #101630;
+  --border: rgba(120, 200, 255, 0.22);
+  --border-strong: rgba(120, 200, 255, 0.45);
+  --text: #e8f1ff;
+  --text-dim: #93a4c8;
+  --accent: #22d3ee;
+  --accent-2: #f472b6;
+  --danger: #fb7185;
+  --good: #a3e635;
+  --radius: 14px;
+  --shadow-glow: 0 0 24px rgba(34, 211, 238, 0.35);
+  --font: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mobile browsers hide part of `100%`/`100vh` behind the URL bar. `dvh` tracks
+   the viewport as the chrome slides away, so the touch pads are never cut off. */
+@supports (height: 100dvh) {
+  html,
+  body,
+  #root {
+    height: 100dvh;
+  }
+}
+
+body {
+  background: radial-gradient(circle at 50% 0%, #131a3a 0%, var(--bg) 55%, #02030a 100%);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.4em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+p {
+  margin: 0 0 0.8em;
+}
+
+a {
+  color: var(--accent);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* The canvas must never scroll, pinch-zoom or fire synthetic mouse events. */
+canvas {
+  display: block;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Users who ask for less motion get no animated glow anywhere. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body[data-reduced-motion='true'] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+body[data-contrast='high'] {
+  --panel: #060a18;
+  --panel-solid: #060a18;
+  --border: #7fd4ff;
+  --border-strong: #b9e8ff;
+  --text: #ffffff;
+  --text-dim: #d6e4ff;
+}
