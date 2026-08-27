@@ -4,7 +4,6 @@
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "baseUrl": ".",
     "paths": {
       "@polyball/shared": ["./shared/src/index.ts"],
       "@polyball/shared/*": ["./shared/src/*"]
