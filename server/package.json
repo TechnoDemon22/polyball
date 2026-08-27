@@ -6,7 +6,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --alias:@polyball/shared=../shared/src/index.ts --banner:js=\"import { createRequire as __createRequire } from 'module'; const require = __createRequire(import.meta.url);\"",
+    "build": "npx esbuild src/server.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/server.js --alias:@polyball/shared=../shared/src/index.ts --banner:js=\"import { createRequire as __createRequire } from 'module'; const require = __createRequire(import.meta.url);\"",
     "start": "node dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
