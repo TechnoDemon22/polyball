@@ -18,9 +18,9 @@
     "dev:client": "npm run dev --workspace @polyball/client",
     "dev:server": "npm run dev --workspace @polyball/server",
     "dev:all": "concurrently -n server,client -c magenta,cyan \"npm:dev:server\" \"npm:dev:client\"",
-    "build": "npm run build --workspace @polyball/shared && npm run build --workspace @polyball/server && npm run build --workspace @polyball/client",
+    "build": "npx esbuild server/src/server.ts --bundle --platform=node --target=node20 --format=esm --packages=external --outfile=server/dist/server.js --alias:@polyball/shared=./shared/src/index.ts && npx vite build client",
     "preview": "npm run preview --workspace @polyball/client",
-    "start": "npm run start --workspace @polyball/server",
+    "start": "node server/dist/server.js",
     "test": "npm run test --workspaces --if-present",
     "test:watch": "npm run test:watch --workspace @polyball/shared",
     "typecheck": "npm run typecheck --workspaces --if-present",
@@ -31,9 +31,14 @@
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "4.3.4",
     "esbuild": "0.24.2",
+    "express": "4.21.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "typescript": "5.7.2",
-    "vite": "5.4.11"
+    "vite": "5.4.11",
+    "ws": "8.18.0"
   },
   "devDependencies": {
     "@eslint/js": "9.17.0",
