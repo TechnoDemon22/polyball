@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 /**
- * Hand-rolled router. Polyball only needs four destinations:
+ * Hand-rolled router supporting root hosting and subpath hosting (e.g. GitHub Pages).
  *
  *   /               landing
  *   /practice       browser-only practice match
@@ -19,8 +19,21 @@ const NAVIGATION_EVENT = 'polyball:navigate';
 /** Only the unambiguous room-code characters are accepted from the URL. */
 const ROOM_CODE_PATTERN = /^[A-Z0-9]{4,8}$/;
 
+function getBasePath(): string {
+  if (typeof window === 'undefined') return '';
+  const parts = window.location.pathname.split('/').filter(Boolean);
+  if (parts.length > 0 && parts[0] === 'polyball') {
+    return '/polyball';
+  }
+  return '';
+}
+
 export function parseRoute(pathname: string): Route {
-  const parts = pathname.split('/').filter(Boolean);
+  let parts = pathname.split('/').filter(Boolean);
+  // Strip subpath prefix if hosted on GitHub Pages (e.g. /polyball/...)
+  if (parts.length > 0 && parts[0] === 'polyball') {
+    parts = parts.slice(1);
+  }
   if (parts.length === 0) return { name: 'landing' };
   if (parts[0] === 'practice') return { name: 'practice' };
   if (parts[0] === 'join') {
@@ -36,8 +49,11 @@ export function parseRoute(pathname: string): Route {
 
 export function navigate(to: string, replace = false): void {
   if (typeof window === 'undefined') return;
-  if (replace) window.history.replaceState({}, '', to);
-  else window.history.pushState({}, '', to);
+  const base = getBasePath();
+  const target = base && !to.startsWith(base) ? `${base}${to.startsWith('/') ? '' : '/'}${to}` : to;
+
+  if (replace) window.history.replaceState({}, '', target);
+  else window.history.pushState({}, '', target);
   window.dispatchEvent(new Event(NAVIGATION_EVENT));
 }
 

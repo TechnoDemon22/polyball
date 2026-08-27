@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => {
   const port = Number.parseInt(env.VITE_PORT ?? '5173', 10);
 
   return {
+    base: './',
     root: path.resolve(__dirname, 'client'),
     plugins: [react()],
     resolve: {
