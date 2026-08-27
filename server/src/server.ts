@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -81,7 +82,15 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 if (config.serveStatic) {
-  const clientDir = path.resolve(here, config.clientDir);
+  const candidates = [
+    path.resolve(config.clientDir),
+    path.resolve(process.cwd(), 'client/dist'),
+    path.resolve(process.cwd(), config.clientDir),
+    path.resolve(here, config.clientDir),
+    path.resolve(here, '../client/dist'),
+    path.resolve(here, '../../client/dist'),
+  ];
+  const clientDir = candidates.find((dir) => fs.existsSync(dir)) ?? candidates[0];
 
   // Serve hashed assets with long cache headers
   app.use(
@@ -95,7 +104,7 @@ if (config.serveStatic) {
   // Serve remaining static files
   app.use(
     express.static(clientDir, {
-      index: false,
+      index: 'index.html',
       maxAge: '1h',
     }),
   );
