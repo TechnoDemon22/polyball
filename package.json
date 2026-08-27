@@ -18,7 +18,7 @@
     "dev:client": "npm run dev --workspace @polyball/client",
     "dev:server": "npm run dev --workspace @polyball/server",
     "dev:all": "concurrently -n server,client -c magenta,cyan \"npm:dev:server\" \"npm:dev:client\"",
-    "build": "npx esbuild server/src/server.ts --bundle --platform=node --target=node20 --format=esm --packages=external --outfile=server/dist/server.js --alias:@polyball/shared=./shared/src/index.ts && npx vite build client",
+    "build": "npx esbuild server/src/server.ts --bundle --platform=node --target=node20 --format=esm --packages=external --outfile=server/dist/server.js --alias:@polyball/shared=./shared/src/index.ts && npx vite build",
     "preview": "npm run preview --workspace @polyball/client",
     "start": "node server/dist/server.js",
     "test": "npm run test --workspaces --if-present",
